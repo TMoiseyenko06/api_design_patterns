@@ -34,6 +34,7 @@ class Order(Base):
 class Production(Base):
     __tablename__ = 'production'
     id: Mapped[int] = mapped_column(primary_key=True)
+    employee_id: Mapped[int] = mapped_column(db.ForeignKey('employees.id'))
     product_id: Mapped[int] = mapped_column(db.ForeignKey('products.id'))
     quantity_produced: Mapped[int] = mapped_column(db.Integer,nullable=False)
-    date_produced: Mapped[datetime.date] = mapped_column(Date)
+    date_produced: Mapped[datetime.date] = mapped_column(Date,default=datetime.date.today())

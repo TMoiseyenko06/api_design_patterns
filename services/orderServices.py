@@ -52,11 +52,11 @@ def get(id):
             else:
                 return jsonify({"error":"order not found"})
             
-def get_all():
+def get_all(page,per_page):
     try:
         with Session(db.engine) as session:
             with session.begin():
-                results = session.query(Order).all()
-                return orders_schema.jsonify(results)
+                results = db.paginate(Order, page=page,per_page=per_page)
+                return orders_schema.jsonify(results),200
     except Exception as e:
         return jsonify({"error": str(e)}), 500

@@ -39,3 +39,7 @@ def get(id):
     
 def get_all():
     return customerService.get_all()
+
+def get_orders():
+    amount = request.args.get('amount',0,type=int)
+    return customerService.get_orders(amount)

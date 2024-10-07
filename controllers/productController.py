@@ -2,6 +2,7 @@ from flask import request, jsonify
 from middleware.schemas import product_schema
 from marshmallow import ValidationError
 from services import productService
+import datetime
 
 def add():
     try:
@@ -33,7 +34,13 @@ def get(id):
     return productService.get(id)
 
 def get_all():
-    return productService.get_all()
-
+    page = request.args.get('page',1,type=int)
+    per_page = request.args.get('per_page',10,type=int)
+    return productService.get_all(page,per_page)
     
+def get_ordered():
+    return productService.get_ordered()
 
+def get_production():
+    date = request.args.get('date',datetime.date.today())
+    return productService.get_production(date)

@@ -1,13 +1,14 @@
 from sqlalchemy.orm import Session
 from flask import jsonify
 from database import db
-from models.models import Production
+from models.models import Production, Order
 from middleware.schemas import production_schema, productions_schema
+from sqlalchemy import func
 
-def get(production_data):
+def add(production_data):
     with Session(db.engine) as session:
         with session.begin():
-            new_production  = Production(product_id=production_data['product_id'],quantity_produced=production_data['quantity_produced'])
+            new_production  = Production(product_id=production_data['product_id'],employee_id=production_data['employee_id'],quantity_produced=production_data['quantity_produced'])
             session.add(new_production)
             session.commit()
         session.refresh(new_production)
@@ -51,3 +52,4 @@ def get_all():
                 return productions_schema.jsonify(results)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    

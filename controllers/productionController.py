@@ -8,7 +8,7 @@ def add():
         production_data = production_schema.load(request.json)
     except ValidationError as e:
         return jsonify(e.messages)
-    production_add = productionService.get(production_data)
+    production_add = productionService.add(production_data)
     return production_schema.jsonify(production_add)
 
 def remove(id):
@@ -33,3 +33,4 @@ def get(id):
 
 def get_all():
     return productionService.get_all()
+

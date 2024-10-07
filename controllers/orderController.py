@@ -37,4 +37,6 @@ def get(id):
         return jsonify({"error":"order not found"})
     
 def get_all():
-    return orderServices.get_all()
+    page = request.args.get('page',1,type=int)
+    per_page = request.args.get('per_page',5,type=int)
+    return orderServices.get_all(page,per_page)

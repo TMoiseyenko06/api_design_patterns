@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
 from database import db
-from models.models import Employee
-from middleware.schemas import employee_schema,employees_schema
+from models.models import Employee, Production
+from middleware.schemas import employee_schema,employees_schema, production_group_schema
 from flask import jsonify
+from sqlalchemy import func
 
 def add(employee_data):
     with Session(db.engine) as session:
@@ -51,3 +52,9 @@ def get_all():
                 return employees_schema.jsonify(results)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+def get_produced():
+    with Session(db.engine) as session:
+        with session.begin():
+            results = session.query(Production.employee_id, func.sum(Production.quantity_produced).label('total_produced')).group_by(Production.employee_id).all()
+            return production_group_schema.jsonify(results)

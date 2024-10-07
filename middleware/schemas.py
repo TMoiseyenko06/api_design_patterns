@@ -43,13 +43,29 @@ class Customer(ma.Schema):
 
 class Production(ma.Schema):
     id = fields.Integer(required=False)
+    employee_id = fields.Integer(required=False)
     product_id = fields.Integer(required=True)
     quantity_produced = fields.Integer(required=True)
     date_produced = fields.Date(required=False,missing=datetime.date.today())
 
     class Meta:
-        fields = ('id','product_id','quantity_produced','date_produced')
+        fields = ('id','employee_id','product_id','quantity_produced','date_produced')
 
+class ProductionGroup(ma.Schema):
+    employee_id = fields.Integer()
+    total_produced = fields.Integer()
+
+class OrderAmount(ma.Schema):
+    product_id = fields.Integer()
+    total_ordered = fields.Integer()
+
+class CustomerOrderAmount(ma.Schema):
+    customer_id = fields.Integer()
+    total_ordered = fields.Integer()
+
+class ProductProductionAmount(ma.Schema):
+    product_id = fields.Integer()
+    total_produced = fields.Integer()
 
 employee_schema = Employee()
 employees_schema = Employee(many=True)
@@ -65,3 +81,8 @@ customers_schema = Customer(many=True)
 
 production_schema = Production()
 productions_schema = Production(many=True)
+
+production_group_schema = ProductionGroup(many=True)
+amount_order_schema = OrderAmount(many=True)
+customer_amount_order = CustomerOrderAmount(many=True)
+product_production_amount = ProductProductionAmount(many=True)

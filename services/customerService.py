@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
 from flask import jsonify
 from database import db
-from models.models import Customer
-from middleware.schemas import customer_schema, customers_schema
+from models.models import Customer,Order
+from middleware.schemas import customer_schema, customers_schema, customer_amount_order
+from sqlalchemy import func
 
 def add(customer_data):
     with Session(db.engine) as session:
@@ -54,6 +55,10 @@ def get_all():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
             
-
+def get_orders(amount):
+    with Session(db.engine) as session:
+        with session.begin():
+            results = session.query(Order.customer_id, func.sum(Order.total_price).label('total_ordered')).group_by(Order.customer_id).having(func.sum(Order.total_price) > amount)
+            return customer_amount_order.jsonify(results)
                 
                 

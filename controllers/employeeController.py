@@ -36,3 +36,5 @@ def get_all():
     return employeeService.get_all()
 
     
+def get_produced():
+    return employeeService.get_produced()
