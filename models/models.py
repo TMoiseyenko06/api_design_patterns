@@ -38,3 +38,10 @@ class Production(Base):
     product_id: Mapped[int] = mapped_column(db.ForeignKey('products.id'))
     quantity_produced: Mapped[int] = mapped_column(db.Integer,nullable=False)
     date_produced: Mapped[datetime.date] = mapped_column(Date,default=datetime.date.today())
+
+class User(Base):
+    __tablename__ = 'users'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str] = mapped_column(db.String(255), nullable=False, unique=True)
+    password: Mapped[str] = mapped_column(db.String(500),nullable=False)
+    role: Mapped[str] = mapped_column(db.String(10),nullable=False)

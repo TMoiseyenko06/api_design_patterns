@@ -7,6 +7,7 @@ from routes.productBP import product_blueprint
 from routes.employeeBP import employee_blueprint
 from routes.orderBP import order_blueprint
 from routes.productionBP import production_blueprint
+from routes.userBP import user_blueprint
 from limiter import limiter
 
 
@@ -27,6 +28,7 @@ def blue_print_config(app):
     app.register_blueprint(employee_blueprint,url_prefix='/employee')
     app.register_blueprint(order_blueprint,url_prefix='/order')
     app.register_blueprint(production_blueprint,url_prefix='/production')
+    app.register_blueprint(user_blueprint,url_prefix='/user')
 
 def config_rate_limit():
     limiter.limit('100 per day')(customer_blueprint)

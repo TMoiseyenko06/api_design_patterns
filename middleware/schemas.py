@@ -51,6 +51,14 @@ class Production(ma.Schema):
     class Meta:
         fields = ('id','employee_id','product_id','quantity_produced','date_produced')
 
+class User(ma.Schema):
+    id = fields.Integer(required=False)
+    username = fields.String(required=True)
+    password = fields.String(required=True)
+    role = fields.String(required=False,default='employee')
+    class Meta:
+        fields = ('id','username','password','role')
+
 class ProductionGroup(ma.Schema):
     employee_id = fields.Integer()
     total_produced = fields.Integer()
@@ -86,3 +94,6 @@ production_group_schema = ProductionGroup(many=True)
 amount_order_schema = OrderAmount(many=True)
 customer_amount_order = CustomerOrderAmount(many=True)
 product_production_amount = ProductProductionAmount(many=True)
+
+user_schema = User()
+users_schema = User(many = True)
