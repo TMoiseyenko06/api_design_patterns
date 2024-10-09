@@ -4,7 +4,7 @@ from services import customerService
 from marshmallow import ValidationError
 from utils.util import token_required, role_required
 
-
+@token_required
 def add():
     try:
         customer_data = customer_schema.load(request.json)

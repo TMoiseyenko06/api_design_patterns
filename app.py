@@ -9,10 +9,7 @@ from routes.orderBP import order_blueprint
 from routes.productionBP import production_blueprint
 from routes.userBP import user_blueprint
 from limiter import limiter
-
-
-
-
+from utils.util import token_required, role_required
 
 def create_app(config_name):
     app = Flask(__name__)
@@ -20,6 +17,10 @@ def create_app(config_name):
     db.init_app(app)
     ma.init_app(app)
     limiter.init_app(app)
+    blue_print_config(app)
+    config_rate_limit()
+    with app.app_context():
+        db.create_all()
     return app
 
 def blue_print_config(app):
@@ -37,13 +38,7 @@ def config_rate_limit():
     limiter.limit('20 per day')(order_blueprint)
     limiter.limit('100 per day')(production_blueprint)
 
-if __name__ == '__main__':
-    app = create_app('DevelopmentConfig')
 
-    blue_print_config(app)
-    config_rate_limit()
-    with app.app_context():
-        db.create_all()
-
-    app.run(debug=True)
+app = create_app('DevelopmentConfig')
+app.run(debug=True)
 
