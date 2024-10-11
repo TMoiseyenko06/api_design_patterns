@@ -20,6 +20,7 @@ def remove(id):
         with session.begin():
             customer = session.get(Customer, id)
             if customer:
+                session.query(Order).filter(Order.customer_id == id).delete()
                 session.delete(customer)
                 session.commit()
             else:
