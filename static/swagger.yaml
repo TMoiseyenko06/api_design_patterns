@@ -1,0 +1,829 @@
+swagger: '2.0'
+info:
+  title: "rest_api_patterns"
+  description: ""
+  version: "1.0.0"
+host: "127.0.0.1:5000"
+schemes:
+ - "http"
+consumes:
+ - "application/json"
+produces:
+ - "application/json"
+securityDefinitions:
+  bearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+paths: 
+  /user/login:
+    post:
+      tags:
+      - user
+      summary: "Login Endpoint"
+      description: "Endpoint for user authentication"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Credentials for login"
+          required: true
+          schema:
+            $ref: "#/definitions/Credentials"
+      responses:
+        200:
+          description: "Login successful"
+          schema:
+            $ref: "#/definitions/LoginResponse"
+          examples:
+            application/json:
+              auth_token: "biubYTCKJHvytcrjgCYRT89VUVUTC324FSDF0..."
+              message: "Login successful"
+              status: "success"
+        400:
+          description: "Data not found"
+          schema:
+            $ref: "#/definitions/LoginResponse"
+          examples:
+            application/json:
+              auth_token: 'None'
+              message: "Username or Password not found"
+              status: "Not found"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+  /user/:
+    post:
+      tags: 
+       - user
+      summary: "Add user Endpoint"
+      description: "Endpoint for adding a user"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "New user Credentials"
+        required: true
+        schema:
+          $ref: "#/definitions/Credentials"
+      responses:
+        201:
+          description: "New User Created"
+          schema:
+            $ref: "#/definitions/BasicResponse"
+          examples:
+            application/json:
+              message: "User Created"
+        400:
+          description: "Username is not unique"
+          schema:
+            $ref: "#/definitions/BasicError"
+          examples:
+            application/json:
+              error: "Username already Exists"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+  /production/:
+    post:
+      tags:
+      - production 
+      summary: "Create Production Endpoint"
+      description: "Create a production for a product"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "New Production Details"
+        required: true
+        schema:
+          $ref: "#/definitions/ProductionInformation"
+      responses:
+        201:
+          description: "Production creation Endpoint"
+          schema:
+            $ref: "#/definitions/BasicResponse"
+          examples:
+            application/json:
+              message: "Production created"
+        400:
+          description: "Production Error"
+          schema:
+            $ref: "#/definitions/BasicError"
+          examples:
+            application/json:
+              error: "validation error"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+                
+  /production/<int:id>:
+    delete:
+      tags:
+      - production
+      summary: "Remove production Endpoint"
+      description: "Completly remove and void production and produced items"
+      parameters:
+      - in: "path"
+        name: "id"
+        type: 'integer'
+        required: true
+        description: "Production deletion Details"
+        schema:
+          
+      responses:
+        200:
+          description: "Production deletion Endpoint"
+          schema:
+            $ref: "#/definitions/BasicResponse"
+          examples:
+            application/json:
+              message: "Production {id} deleted"
+        400:
+          description: "Production not found"
+          schema:
+            $ref: "#/definitions/BasicError"
+          examples:
+            application/json:
+              error: "Production {id} not found"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+    put: 
+      tags:
+      - production
+      summary: "Update Production"
+      description: "Update existing Production"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ProductionInformation"
+      responses:
+        200:
+          description: "Production updated"
+          schema:
+            $ref: "#/definitions/BasicResponse"
+          examples:
+            application/json:
+              message: "Production {id} updated"
+        400:
+          description: "Production not found"
+          schema:
+            $ref: "#/definitions/BasicError"
+          examples:
+            application/json:
+              error: "Production {id} not found"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+    get:
+      tags:
+      - production
+      summary: "Get production by id"
+      description: "Get production by id"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+      responses:
+        200:
+          description: "Production"
+          schema:
+            $ref: "#/definitions/ProductionInformation"
+        400:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/BasicError"
+          examples:
+            application/json:
+              error: "Production not found"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+  /production/all:
+    get:
+      tags:
+      - production
+      summary: "Get all production"
+      responses:
+        200:
+          description: "All Production"
+          schema:
+            $ref: "#/definitions/ProductionInformation"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+  /product:
+    post:
+      tags:
+      - product
+      summary: "Add product"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ProductInformationNI"
+      responses:
+        200:
+          description: "Product Added"
+          schema:
+            $ref: "#/definitions/BasicMessage"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+  /product/<int:id>:
+    delete:
+      tags:
+      - product
+      summary: "delete product"
+      parameters:
+      - in: "path"
+        type: "integer"
+        required: true
+      responses:
+        200:
+          description: "Product deleted"
+          schema:
+            $ref: "#/definitions/BasicResponse"
+        400:
+          description: "Product not found"
+          schema:
+            $ref: "#/definitions/BasicError"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+    put:
+      tags:
+      - product
+      summary: "Update product"
+      parameters:
+      - in: "path"
+        name: "id"
+        type: "integer"
+        required: true
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/ProductInformationNI"        
+      responses:
+        200:
+          description: "Product Updated"
+          schema:
+            $ref: "#/definitions/BasicResponse"
+        400:
+          description: "Product not found"
+          schema:
+            $ref: "#/definitions/BasicError"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+    get:
+      tags: 
+      - product
+      summary: "Get product"
+      parameters:
+      - in: "path"
+        name: "id"
+        type: "integer"
+        required: true
+      responses:
+        200:
+          description: "Product"
+          schema:
+            $ref: "#/definitions/ProductInformation"
+        400:
+          description: "Product not found"
+          schema:
+            $ref: "#/definitions/BasicError"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+  product/ordered:
+    get:
+      tags:
+      - product
+      summary: "Get ordered products"
+      parameters:
+      - in: "path"
+        name: "id"
+        type: "integer"
+        required: true
+      responses:
+        200:
+          description: "Ordered Products"
+          schema:
+            $ref: "#/definitions/ProductInformation"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+  product/produced:
+    get:
+      tags:
+      - product
+      summary: "Get produced Products"
+      parameters:
+      - in: "path"
+        name: "id"
+        type: "integer"
+        required: true
+      responses:
+        200:
+          description: "Produced Products"
+          schema:
+            $ref: "#/definitions/ProductInformation"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+  order:
+    post:
+      tags:
+      - order
+      summary: "Make Order"
+      parameters:
+      - in: "body"
+        name: "body"
+        schema:
+          $ref: "#/definitions/ProductInformationNI"
+      responses:
+        200:
+          description: "Order added"
+          schema:
+            $ref: "#/definitions/BasicResponse"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+    get:
+      tags:
+      - order
+      summary: "Get all Orders"
+      parameters:
+      - in: "path"
+        name: "id"
+        type: "integer"
+        required: true
+        responses:
+          200:
+            description: "Produced Products"
+            schema:
+              $ref: "#/definitions/OrderInformation"
+          401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+      
+
+  order/<int:id>:
+    delete:
+      tags:
+      - order
+      summary: "Delete Order"
+      parameters:
+      - in: "path"
+        name: "id"
+        type: "integer"
+        required: true
+      responses:
+        200:
+          description: "Order Deleted"
+          schema:
+            $ref: "#/definitions/BasicResponse"
+        400:
+          description: "Order not found"
+          schema:
+            $ref: "#/definitions/BasicError"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+    put:
+      tags:
+      - order
+      summary: "Update Order"
+      parameters:
+      - in: "path"
+        name: "id"
+        type: "integer"
+        required: true
+      - in: "body"
+        name: "body"
+        schema:
+          $ref: "#/definitions/OrderInformationNI"
+      responses:
+        200:
+          description: "Order Updated"
+          schema:
+            $ref: "#/definitions/BasicResponse"
+        400:
+          description: "Order not found"
+          schema:
+            $ref: "#/definitions/BasicError"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+    get:
+      tags:
+      - order
+      summary: "Get Order"
+      parameters:
+      - in: "path"
+        name: "id"
+        type: "integer"
+        required: true
+      responses:
+        200:
+          description: "Order"
+          schema:
+            $ref: "#/definitions/OrderInformation"
+        400:
+          description: "Order not found"
+          schema:
+            $ref: "#/definitions/BasicError"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+  employee:
+    post:
+      tags:
+      - employee
+      summary: "Add Employee"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/EmployeeInformationNI"
+      responses:
+        200:
+          description: "Employee Added"
+          schema:
+            $ref: "#/definitions/BasicResponse"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+  employee/<int:id>:
+    delete:
+      tags:
+      - employee
+      summary: "Delete Employee"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: 'integer'
+      responses:
+        200:
+          description: "Employee Deleted"
+          schema:
+            $ref: "#/definitions/BasicResponse"
+        400:
+          description: "Employee not found"
+          schema:
+            $ref: "#/definitions/BasicError"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+  customer:
+    post:
+      tags:
+      - customer
+      summary: "add customer"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/CustomerInformationNI"
+  customer/<int:id>:
+    delete:
+      tags:
+      - customer
+      summary: "Delte customer"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: 'integer'
+      responses:
+        200:
+          description: "Customer Deleted"
+          schema:
+            $ref: "#/definitions/BasicResponse"
+        400:
+          description: "Customer not found"
+          schema:
+            $ref: "#/definitions/BasicError"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+    put:
+      tags:
+      - customer
+      summary: "Update customer"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: 'integer'
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/CustomerInformationNI"
+      responses:
+        200:
+          description: "Customer Updated"
+          schema:
+            $ref: "#/definitions/BasicResponse"
+        400:
+          description: "Customer not found"
+          schema:
+            $ref: "#/definitions/BasicError"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+    get:
+      tags:
+      - customer
+      summary: "Get customer"
+      parameters:
+      - in: "path"
+        name: "id"
+        required: true
+        type: 'integer'
+      responses:
+        200:
+          description: "Customer"
+          schema:
+            $ref: "#/definitions/CustomerInformation"
+        400:
+          description: "Customer not found"
+          schema:
+            $ref: "#/definitions/BasicError"
+        401:
+            description: "Token Error"
+            schema:
+              $ref: "#/definitions/TokenNotFound"
+            examples:
+              application/json:
+                message: "Token not found"
+
+
+
+  
+
+
+
+definitions: 
+  Credentials:
+      type: 'object'
+      properties:
+        username:
+          type: 'string'
+          description: 'Username'
+        password:
+          type: 'string'
+          description: 'password'
+      required:
+        - 'username'
+        - 'password'
+  LoginResponse:
+      type: 'object'
+      properties:
+        status:
+          type: 'string'
+          description: 'status of response'
+        message:
+          type: 'string'
+          description: 'response message'
+        auth_token:
+          type: 'string'
+          description: 'authentication token'
+  TokenNotFound:
+      type: 'object'
+      properties:
+        message:
+          type: "string"
+          description: "error message"
+  BasicResponse:
+      type: 'object'  
+      properties:
+        message:
+          type: 'string'
+          description: "basic return message"
+  BasicError:
+      type: 'object'
+      properties:
+        error:
+          type: 'string'
+          description: "Basic Error Message"
+  ProductionInformation:
+      type: 'object'
+      properties:
+        employee_id:
+          type: 'integer'
+          description: "Id of the employee who produced"
+        product_id:
+          type: 'integer'
+          description: "Id of product being produced"
+        quantity_produced:
+          type: 'integer'
+          description: "amount of product produced"
+        date_produced:
+          type: 'string'
+          format: 'date'
+          description: "date of production"
+  ProductInformationNI:
+    type: 'object'
+    properties:
+      name:
+        type: 'string'
+        description: "Product Name"
+      price:
+        type: 'number'
+        description: "Product Price"
+  ProductInformation:
+    type: 'object'
+    properties:
+      id:
+        type: 'integer'
+        description: "Product id"
+      name:
+        type: 'string'
+        description: "Product Name"
+      price:
+        type: 'number'
+        description: "Product Price"
+  OrderInformationNI:
+    type: 'object'
+    properties:
+      customer_id:
+        type: "integer"
+        description: "Customer id"
+      product_id:
+        type: "integer"
+        description: "Product id"
+      quantity_produced:
+        type: "integer"
+        description: "Quantity produced"
+  OrderInformation:
+    type: 'object'
+    properties:
+      id: 
+        type: "integer"
+        description: "Id of Order"
+      customer_id:
+        type: "integer"
+        description: "Customer id"
+      product_id:
+        type: "integer"
+        description: "Product id"
+      quantity_produced:
+        type: "integer"
+        description: "Quantity produced"
+      total_price:
+        type: 'integer'
+        description: "Total Price of Order"
+  EmployeeInformation:
+    type: 'object'
+    properties:
+      id:
+        type: 'integer'
+        description: 'Employee Id'
+      name:
+        type: 'string'
+        description: 'Employee Name'
+      position:
+        type: 'string'
+        description: 'Employee Position'
+  EmployeeInformationNI:
+      type: 'object'
+      name:
+        type: 'string'
+        description: 'Employee Name'
+      position:
+        type: 'string'
+        description: 'Employee Position'
+  CustomerInformation:
+    type: 'object'
+    properties:
+      id: 
+        type: 'integer'
+        description: 'Custoemr Id'
+      name:
+        type: 'string'
+        description: 'Customer Name'
+      email:
+        type: 'string'
+        format: 'email'
+      phone:
+        type: 'string'
+        example: "1231231231"
+  CustomerInformationNI:
+    type: 'object'
+    properties:
+      name:
+        type: 'string'
+        description: 'Customer Name'
+      email:
+        type: 'string'
+        format: 'email'
+      phone:
+        type: 'string'
+        example: "1231231231"
+        
+
+    
+
+      
+  
+

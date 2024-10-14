@@ -11,6 +11,19 @@ from routes.userBP import user_blueprint
 from limiter import limiter
 from utils.util import token_required, role_required
 
+from flask_swagger_ui import get_swaggerui_blueprint
+
+SWAGGER_URL = '/api/docs'
+API_URL = '/static/swagger.yaml'
+
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name':'rest_api_patterns'
+    }
+)
+
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(f'config.{config_name}')
@@ -30,6 +43,7 @@ def blue_print_config(app):
     app.register_blueprint(order_blueprint,url_prefix='/order')
     app.register_blueprint(production_blueprint,url_prefix='/production')
     app.register_blueprint(user_blueprint,url_prefix='/user')
+    app.register_blueprint(swaggerui_blueprint,url_prefix=SWAGGER_URL)
 
 def config_rate_limit():
     limiter.limit('100 per day')(customer_blueprint)

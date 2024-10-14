@@ -40,9 +40,9 @@ def get(id):
         with session.begin():
             product = session.get(Production, id)
             if product:
-                return production_schema.jsonify(product)
+                return production_schema.jsonify(product), 200
             else:
-                return jsonify({"error":"production not found"})
+                return jsonify({"error":"production not found"}), 400
             
 def get_all():
     try:

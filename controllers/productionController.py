@@ -10,9 +10,9 @@ def add():
     try:
         production_data = production_schema.load(request.json)
     except ValidationError as e:
-        return jsonify(e.messages)
-    production_add = productionService.add(production_data)
-    return production_schema.jsonify(production_add)
+        return jsonify(e.messages), 400
+    productionService.add(production_data)
+    return jsonify({"message":"production added"}), 201
 
 @token_required
 @role_required('employee')

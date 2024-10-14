@@ -24,8 +24,13 @@ def login(username,password):
             "message":"Successfully logged in",
             "auth_token":auth_token
         }
-        return resp
+        return jsonify(resp),200
     else:
-        return None
+        resp = {
+            "status":"error",
+            "message":"Username or Password not correct",
+            "auth_token":"None"
+        }
+        return jsonify(resp),400
 
 

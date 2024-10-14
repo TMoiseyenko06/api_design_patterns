@@ -3,4 +3,4 @@ from controllers import userControllers
 
 user_blueprint = Blueprint('user_bp',__name__)
 user_blueprint.route('/',methods=['POST'])(userControllers.add)
-user_blueprint.route('/login',methods=['GET'])(userControllers.login)
+user_blueprint.route('/login',methods=['POST'])(userControllers.login)
